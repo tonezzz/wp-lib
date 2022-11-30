@@ -1,0 +1,41 @@
+//@import '../../lib/_style_lib_v1.00.scss';
+
+/*Checkout coupon*/
+div.woocommerce{
+    /*
+    > div.woocommerce-info {font-size:200%;}
+    > p.woocommerce-thankyou-order-received {@extend .notification; color:white; text-transform:uppercase;
+        font-size:200%; text-align:center; margin:0; padding:20px 10px;}
+    > ul.woocommerce-thankyou-order-details {
+        > li.order {font-size:150%; color:darkblue;
+            strong {font-size:200%;}
+        }
+    }
+    */
+    
+    //Bank details
+    section.woocommerce-bacs-bank-details{
+        h2 {text-transform:uppercase; font-weight:normal; font-size:30px; color:darkblue;}
+        h2.wc-bacs-bank-details-heading {text-transform:uppercase; font-weight:normal; font-size:30px; color:darkblue;}
+        ul.wc-bacs-bank-details {margin:0 !important;}
+        ul.wc-bacs-bank-details+h3 {margin:20px 0 0 0 !important; text-transform:uppercase; font-weight:normal; font-size:25px; color:darkblue;}
+        h2.wc-bacs-bank-details-heading+h3 {text-transform:uppercase; font-weight:normal; font-size:25px; color:darkblue;}
+        address {font-style:normal;}
+        
+        .bank_logo {padding:0 0 20px 60px !important; position:relative;}
+        .bank_logo::before {
+            content:' '; background-image:url(img/logo_banks.png); background-size:550px;
+            position:absolute; left:0; top:0; width:50px; height:50px;
+        }
+        .bbl::before {background-position:0% 0%;}
+        .ksb::before {background-position:12.5% 0%;}
+        .scb::before {background-position:87.4% 0%;}
+    }
+}
+
+//Checkout:Payment method
+.payment_box.payment_method_bacs{
+    p a {color:white;
+        &:hover{color:#ccc;}
+    }
+}

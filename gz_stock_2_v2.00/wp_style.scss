@@ -1,0 +1,29 @@
+//@import '../../lib/_style_lib.scss'; label
+
+.gz_rotate{
+	transform: rotate(359deg);
+	animation: rotate 1s infinite;
+}
+@keyframes rotate{0% {transform:rotate(0deg);} 100% {transform:rotate(359deg);}}
+
+.gz_stock_2_panel{ border: 1px solid black;
+
+	.table {display:table;
+		.row {display:table-row;
+			.cell {display:table-cell; box-sizing:border-box; padding:0.1em 0.5em;}
+		}
+	}
+
+	.btn {text-align:center; cursor:pointer; background:green; border:1px solid black;
+		&:hover{background-color:lightgreen;}
+		&.import {}
+	}
+	
+	.label {text-align:right; padding:1em;}
+
+	.menu{display:flex; flex-wrap:wrap; width:100%; border:1px solid gray; box-sizing:border-box;
+		.btn{display:block; flex:1 1; margin:4px 8px;}
+	}
+	
+	.sub_panel {border: 1px solid #ccc; margin: 1px;}
+}

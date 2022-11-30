@@ -1,0 +1,73 @@
+@import '../_style_lib_v1.01.scss';
+
+.slick-slider{
+	//> .slick-list{z-index:-1;} //Put it under the arrow
+	> .slick-arrow::before {display:none;} &:hover{> .slick-arrow::before:hover{display:block;}} //Show arrow on hover
+	.item{cursor:pointer;}
+	&.gray_arrow{.slick-arrow{&::before{color:gray;}}}
+	&.red_arrow{.slick-arrow{&::before{color:Red;}}}
+	&.s50{
+		.slick-arrow{ width:50px; height:100%;
+			&:hover{display:block;}
+			&::before{font-size:50px;}
+			&.slick-prev{left:0;}
+			&.slick-next{right:0;}
+		}
+	}
+}
+
+/*
+//Replacing arrow (horizontal): Just add class "arrow"
+div.slick-slider.slick-arrow>button.slick-prev {left:10px; z-index:1; opacity:0; box-shadow:none;
+	width:20px; height:37px; background-image:url(img/arrow-left-gray.png);
+	background-position:center; background-size:contain;}
+div.slick-slider.slick-arrow>button.slick-next {right:10px; z-index:1; opacity:0; box-shadow:none;
+	 width:20px; height:37px; background-image:url(img/arrow-right-gray.png);
+	background-position:center; background-size:contain;}
+div.slick-slider.slick-arrow>ul.slick-dots {bottom:0px; opacity:0;}
+div.slick-slider.slick-arrow>ul.slick-dots>li>button {background-color:transparent !important;}
+div.slick-slider.slick-arrow>ul.slick-dots>li>button::before {font-size:10px; color:white;}
+div.slick-slider.slick-arrow>ul.slick-dots>li.slick-active>button::before {color:blue;}
+
+div.slick-slider.slick-arrow>button.slick-prev:before {content:'';}
+div.slick-slider.slick-arrow>button.slick-next:before {content:'';}
+div.slick-slider.slick-arrow:hover>button.slick-prev {opacity:1; background-color:rgba(0,0,0,0) !important;}
+div.slick-slider.slick-arrow:hover>button.slick-next {opacity:1; background-color:rgba(0,0,0,0) !important;}
+
+div.slick-slider.slick-arrow:hover>ul.slick-dots {opacity:1;}
+//div.slick-slider.slick-arrow:hover>ul.slick-dots>li>button::before {opacity:1; color:blue;}
+
+
+
+//Replacing arrow (vertical)
+div.slick-slider.slick-arrow:hover>button.slick-prev {opacity:1; box-shadow:none;}
+div.slick-slider.slick-arrow:hover>button.slick-next {opacity:1; box-shadow:none;}
+
+//Replacing arrow (vertical)
+div.ver_slider.slick-slider.slick-arrow>button.slick-prev {margin:0 auto; top:10px; z-index:1; opacity:0; box-shadow:none;}
+div.ver_slider.slick-slider.slick-arrow>button.slick-next {top:auto; bottom:10px; z-index:1; opacity:0; box-shadow:none;}
+div.ver_slider.slick-slider.slick-arrow>button.slick-prev:before {content:'↑';}
+div.ver_slider.slick-slider.slick-arrow>button.slick-next:before {content:'↓';}
+div.ver_slider.slick-slider.slick-arrow:hover>button.slick-prev {opacity:1; box-shadow:none;}
+div.ver_slider.slick-slider.slick-arrow:hover>button.slick-next {opacity:1; box-shadow:none;}
+//Replacing arrow (vertical)
+*/
+
+.panel_gallery{height:100%;
+	> button.slick-arrow{
+		position:absolute; top:50%; transform:translateY(-50%);
+		&.slick-prev{left:0;}
+		&.slick-next{right:0;}
+	}
+	> .slick-list{height:100%;
+		> .slick-track{height:100%;
+			> .slick-slide{height:100%;
+				background-size:cover; background-position: center center; background-repeat: no-repeat;
+			}
+		}
+	}
+	> ul.slick-dots{position:absolute; display:block; bottom:0; white-space: nowrap;
+		left:50%; transform:TranslateX(-50%);
+		> li{@include inline_block;}
+	}
+}

@@ -1,0 +1,12 @@
+//@import '../../lib/_style_lib_v1.00.scss';
+
+ul.gz_server_info{display:table;
+    > li.item{display:table-row;
+        > span {display:table-cell; box-sizing:border-box;
+            &.key{text-align:right; padding:0 10px 0 0;
+                //&::after{content:' : ';}
+            }
+        }
+    }
+
+}

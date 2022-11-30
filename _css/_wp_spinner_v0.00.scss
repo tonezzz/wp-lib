@@ -1,0 +1,26 @@
+//https://codepen.io/mandelid/pen/kNBYLJ
+
+@mixin wp_spinner($w:1em ,$h:1em ,$opa:1 ,$modal:no ,$style:3px solid rgba(255,255,255,.3) ) {
+	@if $modal==yes {
+		&:before{display:block; position:absolute;
+			top:0; left:0; content:' '; width: 100%; height:100%; background:rgba(255,255,255,0.5);
+		}
+	}
+	&:after{
+		opacity:$opa; display: block; position:absolute;
+		top:0; left:0; content:' '; width:$w; padding-top:$w; //Making height=width
+		border:$style; border-radius:50%; border-top-color:#fff;
+		animation:wp_spinner 1s ease-in-out infinite;
+		-webkit-animation: wp_spinner 1s ease-in-out infinite;
+	}
+}
+
+//@mixin wp_spinner_
+
+@keyframes wp_spinner {
+  to { -webkit-transform: rotate(360deg); }
+}
+
+@-webkit-keyframes wp_spinner {
+  to { -webkit-transform: rotate(360deg); }
+}

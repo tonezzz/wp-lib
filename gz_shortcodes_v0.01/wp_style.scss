@@ -1,0 +1,39 @@
+/*
+div.nsp_tech_dropdown{box-sizing:border-box; display:flex; width:100%; position:absolute; overflow:visible;
+	> ul.nsp_tech {position:relative; box-sizing:border-box; overflow:visible;
+		flex:1 0 100px; z-index:1;
+		height:40px; border:1px solid #ccc; background:white; margin:4px; padding:0;
+		&:hover{>li{display:block;}}
+		> li {left:0; width:100%; height:40px; padding:4px; line-height:30px; list-style:none;
+			background:white; border:1px solid #ccc;
+			display:none;
+			&.label {display:block; font-weight:bold;}
+			&.item {position:relative;}
+		}
+	}
+}
+*/
+
+@import '../../lib/_style_lib_v1.00.scss';
+
+body > a.go-to-top {display:none;} //Hide the old to-top icon (it shows only at the bottom of page)
+div.overflow_visible {overflow:visible !important;}  //Fix menu floating on top issue
+
+div.nsp_tech_dropdown{display:none;
+	box-sizing:border-box; position:relative; overflow:visible; text-align:center;
+	border:1px solid #ccc; background-color:white;
+	//background-color:rgba(0,0,0,0.8);
+	margin:0 auto;; padding:4px; width:95%; height:auto; z-index:1;
+	> ul.nsp_tech {@extend .inline_block; box-sizing:border-box; position:relative; vertical-align:top; overflow:visible;
+		margin:0 3px; padding:0; width:calc(25% - 6px); height:40px;
+		background:#CCC;
+		&:hover{>li{display:block;}}
+		> li {left:0; width:100%; height:40px; padding:4px; line-height:40px; list-style:none; cursor:pointer;
+			display:none;
+			background-color:#EEE; //border:1px solid #ccc;
+			//background-color:rgba(0,0,0,0.8); color:white;
+			&.label {display:block; font-weight:bold; background-color:#CCC;}
+			&.item {position:relative;}
+		}
+	}
+}
