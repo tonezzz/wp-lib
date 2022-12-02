@@ -1,0 +1,20 @@
+@import '../../_style_lib.scss';
+
+//$trans_black_50 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAEdJREFUeNrszzERACAMALEH5ZWOC4Ze4iCnmha4LSEiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiLyxxNgAHK7AOT5mXDAAAAAAElFTkSuQmCC';
+//$trans_black_10 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAEhJREFUeNrszzERACAMALEHGfUvFBcMvcRBTjUtcFtCRERERERERERERERERERERERERERERERERERERERERERERERE5I8nwADPFwB+fDlyvAAAAABJRU5ErkJggg==';
+//$trans_white_90 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/xQAAukB5vvocQUAAAAASUVORK5CYII=';
+
+.gz_fb_album {display:block; width:100%; height:auto; overflow:hidden; margin:0 0 0 0;// margin:380px 0 0 0;
+	> ul.items{
+		font-size:0; line-height:0; //Eliminating space between row
+		> li.item{@extend .inline_block; width:20%; height:200px; overflow:hidden; position:relative;
+			//,url(img/mv_logo.png) no-repeat center;
+				&::before{content:' '; position:absolute; left:0; top:0; width:100%; height:100%; z-index:0; opacity:.2;
+					background:url(img/mv_logo.png) no-repeat center; background-size:contain;
+				}
+			span.tmb{display:block; position:absolute; left:0; top:0; width:100%; height:100%;
+				background-size:contain; background-position:center; background-repeat:no-repeat; z-index:1;
+			}
+		}
+	}
+}
