@@ -41,8 +41,8 @@ function gz_admin_init(){
     do_action('gz_admin_init_after');
 }
 
-function load_module($prm){ //die('<pre>'.print_r($prm,true));
-    extract($prm,EXTR_PREFIX_ALL,'prm'); //ob_clean(); echo "<pre>"; print_r($prm); die();
+function load_module($prm){
+    extract($prm,EXTR_PREFIX_ALL,'prm');
     global $GZ;
 	$sys_dir = realpath(dirname(__FILE__).'/..').'/';
     $prm_version = empty($prm_version)?'':'_'.$prm_version;
@@ -72,9 +72,10 @@ function load_module($prm){ //die('<pre>'.print_r($prm,true));
 }
 
 	/**
+	20220416:Tony:add_filter() cause failure when ad new page on WP5.8.3
 	 */
 	//if(isset(GZ()->script_loader_tags)) add_filter('script_loader_tag','do_script_loader_tag',999,3);
-	if(!is_admin()) add_filter('script_loader_tag','do_script_loader_tag',999,3);
+	//add_filter('script_loader_tag','do_script_loader_tag',999,3);
 	function do_script_loader_tag($tag,$handle,$src){ //return false;
 		//if(isset($this->script_loader_tags[$handle])&&$this->script_loader_tags[$handle]['debug']) die('<pre>'.print_r(compact('tag','handle','src'),true).print_r($this->script_loader_tags[$handle],true));
 		$atts = array_merge([

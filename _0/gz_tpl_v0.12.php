@@ -1,4 +1,4 @@
-<?php
+<?php //die(__FILE__);
 /*
 v0.12 - 20220404:Tony
 	- Change function name init_scripts > enqueue to match the command
@@ -196,11 +196,7 @@ class gz_tpl{
 
 	/**
 	 * function init_actions() - Add WP actions
-	 * ,'actions' => [
-	 *   ['prm'=>['register_mobile_menu',[$this,'register_mobile_menu']]],
-	 * ]
 	 */
-
 	public function init_actions(){//ob_clean(); die('<pre>'.print_r($this->config['actions'],true));
 		if(is_array($items=$this->config['actions'])){
 			foreach($items as $item){ //ob_clean(); die('<pre>'.print_r($item['prm'],true));

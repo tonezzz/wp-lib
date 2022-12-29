@@ -1,5 +1,9 @@
 <?php
 /*
+v0.13 - 20221228:Tony
+	- Add remove actions
+	  - 20221229:Tony
+	- Add cmb2v2
 v0.12 - 20220404:Tony
 	- Change function name init_scripts > enqueue to match the command
 v0.11 - 20220404:Tony
@@ -141,17 +145,41 @@ class gz_tpl{
 		if(isset($this->config['enqueue_login'])) 	add_action('login_enqueue_scripts',[$this,'init_scripts_login']);
 		if(isset($this->config['post_types'])) 		add_action('init',[$this,'init_post_types']);
 		if(isset($this->config['cmb2'])) 			add_action('cmb2_init',[$this,'init_cmb2']);
+		if(isset($this->config['cmb2v2'])) 			add_action('cmb2_admin_init',[$this,'init_cmb2v2']);
 		if(isset($this->config['meta_tag'])) 		add_action('wp_head',[$this,'init_meta_tag']);
 		if(isset($this->config['image_sizes']))		add_action('init',[$this,'init_image_sizes']);
 		//if(isset($this->config['shortcodes']))	add_action('init',[$this,'init_shortcodes']);
 		if(isset($this->config['shortcodes']))		$this->init_shortcodes();
 		//if(isset($this->config['filters']))		add_action('wp_loaded',[$this,'init_filters']);
 		if(isset($this->config['filters']))			$this->init_filters();
-		if(isset($this->config['filters']))			$this->init_filters();
+		//if(isset($this->config['filters']))		$this->init_filters();
 		//if(isset($this->config['actions']))		add_action('wp_loaded',[$this,'init_actions']);
+		if(isset($this->config['remove_actions']))	$this->remove_actions();
 		if(isset($this->config['actions']))			$this->init_actions();
 		if(isset($this->config['ajaxes']))			add_action('init',[$this,'init_ajaxes']);
 		if(isset($this->config['taxonomies']))		add_action('init',[$this,'init_taxonomies']);
+	}
+
+	/*
+	$config = [
+		'cmb2v2' => [
+			['prm'=>[
+				'id'			=> 'thai',
+				'title' 		=> __('Thai','wordpress')],
+				'object_types'	=> ['product'],
+				'context'		=> 'normal',
+				'fields' => [
+					['name'	=> __('Test','wordpress') ,'id'=>'f1' ,'type'=>'text'],
+				]
+			]
+		]
+	];
+	*/
+	public function init_cmb2v2(){ 
+		if(!is_array($items=$this->config['cmb2v2'])) return;
+		foreach($items as $item){ //die('<pre>'.print_r($item,true));
+			$cmb2 = new_cmb2_box($item['prm']);
+		}
 	}
 
 	/*
@@ -197,16 +225,29 @@ class gz_tpl{
 	/**
 	 * function init_actions() - Add WP actions
 	 * ,'actions' => [
-	 *   ['prm'=>['register_mobile_menu',[$this,'register_mobile_menu']]],
+	 *   ['prm'=>['action_name',[$this,'function_name']]],
 	 * ]
 	 */
-
-	public function init_actions(){//ob_clean(); die('<pre>'.print_r($this->config['actions'],true));
+	public function init_actions(){
 		if(is_array($items=$this->config['actions'])){
-			foreach($items as $item){ //ob_clean(); die('<pre>'.print_r($item['prm'],true));
+			foreach($items as $item){
 				call_user_func_array('add_action',$item['prm']);
 			}
-		} //ob_clean(); echo '<pre>'; print_r($image_sizes); die();
+		}
+	}
+
+	/**
+	 * function remove_actions() - Remove WP actions
+	 * ,'remove_actions' => [
+	 *   ['prm'=>['action_name',[$this,'function_name']]],
+	 * ]
+	 */
+	public function remove_actions(){
+		if(is_array($items=$this->config['remove_actions'])){
+			foreach($items as $item){
+				call_user_func_array('remove_action',$item['prm']);
+			}
+		}
 	}
 
 	/**

@@ -44,8 +44,9 @@ function gz_admin_init(){
 function load_module($prm){ //die('<pre>'.print_r($prm,true));
     extract($prm,EXTR_PREFIX_ALL,'prm'); //ob_clean(); echo "<pre>"; print_r($prm); die();
     global $GZ;
-	$sys_dir = realpath(dirname(__FILE__).'/..').'/';
-    $prm_version = empty($prm_version)?'':'_'.$prm_version;
+	$sys_dir 		= realpath(dirname(__FILE__).'/..').'/';
+    $prm_version 	= empty($prm_version)?'':'_'.$prm_version;
+    $prm_init 		= isset($prm_init)?$prm_init:false;
     switch($prm_type){
         case 'lib0': $path = 'lib/'.$prm_name.$prm_version.'.php'; break;
         default: $path = $prm_type.'/'.$prm_name.$prm_version.'/_wp_class.php';
