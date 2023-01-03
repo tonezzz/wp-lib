@@ -55,7 +55,7 @@ function load_module($prm){ //die('<pre>'.print_r($prm,true));
         require $sys_dir.$path;
         if($prm_init){
             global $$prm_name;
-            $GZ->modules[] = $$prm_name = new $prm_name(); //if($prm_name=='wq') {ob_clean(); echo "<pre>"; print_r(compact($prm_name)); die();}
+            $GZ->modules[$prm_name] = $$prm_name = new $prm_name(); //if($prm_name=='wq') {ob_clean(); echo "<pre>"; print_r(compact($prm_name)); die();}
         }
     //}
     /*
