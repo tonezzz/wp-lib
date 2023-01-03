@@ -17,16 +17,18 @@ class gz_polylang extends gz_tpl{
 		$config = [
 			'cmb2v2' => [
 				['prm'=>[
-					'id'			=> 'thai',
-					'title' 		=> __('Thai','woocommerce'),
+					'id'			=> 'en',
+					'title' 		=> __('English','woocommerce'),
 					'object_types'	=> ['product'],
 					'context'		=> 'normal',
 					'fields' => [
-						['id'=>'_post_title_th' ,'name'=>__('Title','woocommerce') ,'type'=>'text'],
-						['id'=>'_post_content_th' ,'name'=>__('Product description','woocommerce') ,'type'=>'wysiwyg'],
-						['id'=>'_post_excerpt_th' ,'name'=>__('Product excerpt','woocommerce') ,'type'=>'wysiwyg'],
+						['id'=>'_post_title_en' ,'name'=>__('Title','woocommerce') ,'type'=>'text'],
+						['id'=>'_post_sub_th' ,'name'=>__('Sub title (Thai)','woocommerce') ,'type'=>'text'],
+						['id'=>'_post_sub_en' ,'name'=>__('Sub title (English)','woocommerce') ,'type'=>'text'],
+						['id'=>'_post_content_en' ,'name'=>__('Product description','woocommerce') ,'type'=>'wysiwyg'],
+						['id'=>'_post_excerpt_en' ,'name'=>__('Product short description','woocommerce') ,'type'=>'wysiwyg'],
 					]
-				]]
+				]],
 			],
 			'filters' => [
 				['prm'=>['woocommerce_get_breadcrumb',[$this,'woocommerce_get_breadcrumb'],10,2]],
@@ -61,16 +63,16 @@ class gz_polylang extends gz_tpl{
 	}
 
 	function the_excerpt($excerpt){
-		return $this->get_field_lang('_post_excerpt',get_current_lang(),$excerpt);
+		return $this->get_field_lang('_post_excerpt',$this->get_current_lang(),$excerpt);
 	}
 
 	function the_content($content){
 		$arr = $this->split_langs($content);
-		$lang = $this->get_current_language();
+		$lang = $this->get_current_lang();
 		return isset($arr[$lang])?$arr[$lang]:$content;	}
 
 	function woocommerce_get_breadcrumb($crumbs,$breadcrumb){
-		$lang = $this->get_current_language();
+		$lang = $this->get_current_lang();
 		foreach($crumbs as &$item){
 			$arr = $this->split_langs($item[0]);
 			$item[0] = isset($arr[$lang])?$arr[$lang]:$item[0];
@@ -104,8 +106,14 @@ class gz_polylang extends gz_tpl{
 		//return get_meta($product->id,'name_th',get_the_title( $post:integer|WP_Post ))
 		//$txt = preg_split("/[(]/",get_the_title());
 		$titles = $this->split_langs(get_the_title()); //ob_clean(); die('<pre>'.print_r($titles,true));
-		$lang = $this->get_current_language();
+		$lang = $this->get_current_lang();
 		return isset($titles[$lang])?$titles[$lang]:get_the_title();
+	}
+
+	//Get specific language from Valexar string
+	function valexar_text_lang($txt,$lang,$default){
+		$ts = $this->split_langs($txt); //ob_clean(); die('<pre>'.print_r($titles,true));
+		return isset($ts[$lang])?$ts[$lang]:$default;
 	}
 
 	function woocommerce_shop_loop_item_title(){
