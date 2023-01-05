@@ -30,6 +30,9 @@ class gz_multilang extends gz_tpl{
 					]
 				]],
 			],
+  		   	'ajaxes' => [
+				['prm'=>['set_lang',[$this,'set_lang']]]
+			],
 			'filters' => [
 				//For displaying content in multi language
 				['prm'=>['the_title',[$this,'the_title'],10,2]],
@@ -56,6 +59,15 @@ class gz_multilang extends gz_tpl{
 	}
 
 	/*
+	 * 	/wp/wp-admin/admin-ajax.php
+	*/
+	function set_lang(){
+		$lang = isset($_GET['lang'])?$_GET['lang']:'th';
+		echo setcookie('gz_lang',$lang).','.$_COOKIE['gz_lang'];
+		die(0);
+	}
+
+	/*
 	* Setup language base on user's preference.
 	*	?lang=xx > cookie:gz_lang
 	*/
@@ -66,8 +78,10 @@ class gz_multilang extends gz_tpl{
 			'en'	=> 'en_US',
 		];
 		$lang = isset($_GET['lang'])?$_GET['lang']:false;
-		if(!$lang) $lang = isset($_COOKIE['lang'])?$_GET['_COOKIE']:false;
+		if(!$lang) $lang = isset($_COOKIE['gz_lang'])?$_COOKIE['gz_lang']:false;
 		$locale = isset($lc[$lang])?$lc[$lang]:$lc['th'];
+		if(isset($_GET['show_lang'])) die($locale);
+		if(isset($_GET['show_lang_cookie'])) die($_COOKIE['gz_lang']);
 		return $locale;
 	}
 
