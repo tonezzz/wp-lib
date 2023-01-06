@@ -1,4 +1,4 @@
-<?php //die(__FILE__);
+<?php die(__FILE__);
 /*
 * gz_facebook() class.
 *	- Render page badge in iFrame.
@@ -31,7 +31,7 @@ class gz_multilang extends gz_tpl{
 				]],
 			],
   		   	'ajaxes' => [
-				['prm'=>['set_lang',[$this,'set_lang']]]
+				//['prm'=>['set_lang',[$this,'set_lang']]]
 			],
 			'filters' => [
 				//For displaying content in multi language
@@ -61,9 +61,11 @@ class gz_multilang extends gz_tpl{
 	/*
 	 * 	/wp/wp-admin/admin-ajax.php
 	*/
-	function set_lang(){
+	function set_lang(){die(__FILE__);
 		$lang = isset($_GET['lang'])?$_GET['lang']:'th';
-		echo setcookie('gz_lang',$lang).','.$_COOKIE['gz_lang'];
+		//echo setcookie('gz_lang',$lang,2147483647).','.$_COOKIE['gz_lang'];
+		echo 'cookie: '.$_COOKIE['gz_lang'].'<br>';
+		echo 'set: '.setcookie('gz_lang',$lang,time()+60*60).','.$_COOKIE['gz_lang'].'<br>';
 		die(0);
 	}
 
