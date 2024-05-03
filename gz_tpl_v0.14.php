@@ -176,6 +176,7 @@ class gz_tpl{
 	 * 	'ajaxes' => [
 	 *		['prm'=>['get_provinces',[$this,'get_provinces']]]
 	 *	],
+	 *	],
 	 */
 	public function init_ajaxes(){
 		if(is_array($items=$this->config['ajaxes'])){
