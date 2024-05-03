@@ -64,8 +64,9 @@ class gz_tpl{
 		if(isset($this->config['image_sizes']))		add_action('init',[$this,'init_image_sizes']);
 		if(isset($this->config['shortcodes']))		add_action('init',[$this,'init_shortcodes']);
 		if(isset($this->config['filters']))			add_action('init',[$this,'init_filters']);
-		if(isset($this->config['remove_actions']))	add_action('init',[$this,'remove_actions'],10);
-		if(isset($this->config['actions']))			add_action('init',[$this,'init_actions'],20);
+		if(isset($this->config['remove_actions']))	add_action('wp_loaded',[$this,'remove_actions']);
+		//if(isset($this->config['remove_actions']))	$this->remove_actions();
+		if(isset($this->config['actions']))			$this->init_actions();
 		if(isset($this->config['ajaxes']))			add_action('init',[$this,'init_ajaxes']);
 		if(isset($this->config['taxonomies']))		add_action('init',[$this,'init_taxonomies']);
 	}
@@ -174,7 +175,7 @@ class gz_tpl{
 	/**
 	 * 	'ajaxes' => [
 	 *		['prm'=>['get_provinces',[$this,'get_provinces']]]
-	 *	]
+	 *	],
 	 */
 	public function init_ajaxes(){
 		if(is_array($items=$this->config['ajaxes'])){

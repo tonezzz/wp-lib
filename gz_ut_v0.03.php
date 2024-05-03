@@ -15,14 +15,16 @@ function GZ(){global $GZ; return $GZ;}
  */
  //Save module parameters in $GZ array and add action to init module.
 function gz_load_module_2($prm){
-	$mod_name = $prm['name'];
+	//$mod_name = $prm['name'];
 	//Action 'load' means load immediately.
-	if('load'==$prm['action']) load_module($prm);
+	
 	//Action not specify = use default (init)
-	if (empty($prm['action'])) $prm['action']='init';
-	add_action($prm['action'],function() use($prm){
-		load_module($prm);
-	});
+	if(empty($prm['action'])) $prm['action']='init';
+    if('load'==$prm['action']) load_module($prm); else{
+        add_action($prm['action'],function() use($prm){
+            load_module($prm);
+        });
+    }
 }
 
 /********************/
