@@ -22,8 +22,8 @@ class gz_multilang extends gz_tpl{
 		if($text_domain) $this->text_domain = $text_domain;
 		$config = [
 			'enqueue'  => [
-				['type'=>'style' ,'load'=>true ,'prm'=>['font-awesome','//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css']],
-				['type'=>'style' ,'load'=>true ,'prm'=>[__CLASS__,'[REL_PATH]wp_style.scss'],['font-awesome']],
+				//['type'=>'style' ,'load'=>true ,'prm'=>['font-awesome','//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css']],
+				//['type'=>'style' ,'load'=>true ,'prm'=>[__CLASS__,'[REL_PATH]wp_style.scss'],['font-awesome']],
 				['type'=>'script' ,'load'=>true ,'prm'=>[__CLASS__,'[REL_PATH]wp_script.js',['jquery-core']]],
 				['type'=>'localize', 'prm'=>[__CLASS__,__CLASS__,[
 					//'menu_lang'	=> $this->render_menu_lang(),
@@ -37,8 +37,8 @@ class gz_multilang extends gz_tpl{
 					'context'				=> 'normal',
 					'fields' 				=> [
 						['id'=>'_post_title_en' ,'name'=>__('Title (English)','woocommerce') ,'type'=>'text'],
-						['id'=>'_post_sub_th' ,'name'=>__('Sub title (Thai)','woocommerce') ,'type'=>'textarea_small'],
-						['id'=>'_post_sub_en' ,'name'=>__('Sub title (English)','woocommerce') ,'type'=>'textarea_small'],
+						//['id'=>'_post_sub_th' ,'name'=>__('Sub title (Thai)','woocommerce') ,'type'=>'textarea_small'],
+						//['id'=>'_post_sub_en' ,'name'=>__('Sub title (English)','woocommerce') ,'type'=>'textarea_small'],
 						['id'=>'_post_content_en' ,'name'=>__('Post content (English)','woocommerce') ,'type'=>'wysiwyg'],
 						['id'=>'_post_excerpt_en' ,'name'=>__('Post excerpt (English)','woocommerce') ,'type'=>'wysiwyg'],
 					]
@@ -47,6 +47,7 @@ class gz_multilang extends gz_tpl{
   		   	'ajaxes' => [
 			],
 			'filters' => [
+				['prm'=>['locale',[$this,'get_locale']]],
 				//For displaying content in multi language
 				['prm'=>['the_title',[$this,'the_title'],10,2]],
 				['prm'=>['get_term',[$this,'get_term'],10,2]],
@@ -58,7 +59,8 @@ class gz_multilang extends gz_tpl{
 				['prm'=>['woocommerce_cart_item_name',[$this,'woocommerce_cart_item_name'],10,3]],
 
 				//['prm'=>['wp_setup_nav_menu_item',[$this,'filter_menu_lang'],1]],
-				//['prm'=>['get_the_excerpt',[$this,'get_the_excerpt'],10,2]],
+				//['prm'=>['the_excerpt',[$this,'get_the_excerpt'],21,2]],
+				//['prm'=>['get_the_excerpt',[$this,'get_the_excerpt'],21,2]],
 				//For language switching
 				//['prm'=>['locale',[$this,'get_locale_2'],50,1]],
 				//['prm'=>['determine_locale',[$this,'get_locale']]],
@@ -117,17 +119,21 @@ class gz_multilang extends gz_tpl{
 	//Replace with correct language if exists.
 	function template_redirect(){
 		global $post;
-		if($data=get_post_meta($post->ID,'_post_content_'.$this->get_current_lang(),true)) $post->post_content = $data;
-		if($data=get_post_meta($post->ID,'_post_excerpt_'.$this->get_current_lang(),true)) $post->post_excerpt = $data;
+		//if ($data=get_post_meta($post->ID,'_post_content_'.$this->get_current_lang(),true)) $post->post_content = $data;
+		//if ($data=get_post_meta($post->ID,'_post_excerpt_'.$this->get_current_lang(),true)) $post->post_excerpt = $data;
+		if ($data = get_field_lang($post,'_post_content_',$this->get_current_lang(),false); $post->post_content = $data;
+		if ($data = get_field_lang($post,'_post_excerpt_',$this->get_current_lang(),false); $post->post_excerpt = $data;
 	}
 
 	/*
 	* If there's meta _post_title_en then return it, otherwise return the original title;
 	* https://developer.wordpress.org/reference/functions/get_the_title/
 	*/
-	function the_title($title,$post_id){
-		if(is_admin() && !wp_doing_ajax()) return $title;
-		if($new_title=get_post_meta($post_id,'_post_title_'.$this->get_current_lang(),true)) $title = $new_title;
+	function the_title($title,$post_id){ if(isset($_GET['d'])) //die($this->get_current_lang());
+		if (is_admin() && !wp_doing_ajax()) return $title;
+		if (!empty($suffix=$this->get_suffix())){ //die($suffix);
+			if ($new_title=get_post_meta($post_id,'_post_title'.$suffix,true)) $title = $new_title; //die($title);
+		}
 		return $title;
 	}
 
@@ -135,10 +141,11 @@ class gz_multilang extends gz_tpl{
 	* If there's meta _post_excerpt_en then return it, otherwise return the original title;
 	* https://developer.wordpress.org/reference/functions/get_the_excerpt/
 	*/
-	function get_the_excerpt($excerpt,$post){
-		if(is_admin() && !wp_doing_ajax()) return $excerpt;
-		if($new_excerpt=get_post_meta($post->ID,'_post_excerpt_'.$this->get_current_lang(),true)) return $new_excerpt;
-		else return $excerpt;
+	function get_the_excerpt($excerpt,$post){ if(isset($_GET['d'])) die($this->get_current_lang());
+		global $post;
+		$excerpt = get_field_lang($post,'_post_excerpt_',$this->get_current_lang(),$excerpt); //die($excerpt);
+		//if($new_excerpt=get_post_meta($post->ID,'_post_excerpt_'.$this->get_current_lang(),true)) return $new_excerpt;
+		//else return $excerpt;
 	}
 
 	///////////////////////
@@ -197,40 +204,52 @@ class gz_multilang extends gz_tpl{
 	 * 2. Use loale from user_lang_pref if login.
 	*/
 	function init_locale(){ //return;
-		if(isset($_GET['lang'])){
-			$locale = $_GET['lang']; if($locale=='en') $locale='en_US';
+		if(isset($_GET['lang'])){ //"lang=th or lang=en"
+			$lang = $_GET['lang'];
 			//if($user_id=get_current_user_id()) update_user_option($user_id,'user_lang_pref',$locale);
-			setcookie('gz_lang',$locale,time()+60*60*24*355);
 			//$_COOKIE['gz_lang'] = $lang; //echo $lang.' '.$_COOKIE['gz_lang'];
 			//$this->is_load_theme_textdomain = false; //Clear theme textdomain flag for reloading
 		}else{
-			if($user_id=get_current_user_id()) $locale = get_user_option('user_lang_pref',$user_id );
-			else $locale = $_COOKIE['gz_lang'];
-			if($locale=='en') $locale='en_US';
+			//$lang = "th";
+			//if($user_id=get_current_user_id()) $locale = get_user_option('user_lang_pref',$user_id );
+			$lang = isset($_COOKIE['gz_lang'])?$_COOKIE['gz_lang']:"";
+			//if($locale=='en') $locale='en_US';
 		}
-		//$this->show_debug_lang();
-		//if(empty($locale)) $locale = 'en_US';
-		//switch_to_locale($locale);
-		//$this->load_translations();
+		$this->set_lang($lang);
 	}
 
+	function set_lang($lang=''){
+		switch($lang){
+			case 'en': $lang='en'; $locale='en_US'; break;
+			case 'th': $lang='th'; $locale='th_TH'; break;
+			default: $lang='th'; $locale='th_TH';
+		}
+		setcookie('gz_lang',$locale,time()+60*60*24*355); $_COOKIE['gz_lang'] = $lang;
+		setcookie('gz_locale',$locale,time()+60*60*24*355); $_COOKIE['gz_locale'] = $locale;
+		switch_to_locale($locale);
+
+		if(isset($_GET['d'])) {
+			//$this->show_debug_lang(); die();
+			$locale = get_locale(); //die($locale);
+		}
+		//if(empty($locale)) $locale = 'en_US';
+		//switch_to_locale($locale);
+		$this->load_translations();
+	}
+
+	function get_suffix(){
+		if($_COOKIE['gz_lang']=='th') return '';
+		else return '_'.$_COOKIE['gz_lang'];
+	}
 	/*
 	* Setup language base on user's preference.
 	*	?lang=xx > cookie:gz_lang
 	*/
-	function get_locale_2($locale='en_US'){$locale='en_US';
-		return $locale;
-	}
-	function get_locale(){
-		$locale = 'th';
-		if(isset($_GET['lang'])){
-			$locale = $_GET['lang']; 
-		}else{
-			if($user_id=get_current_user_id()){
-				$locale = get_user_option('user_lang_pref',get_current_user_id());
-			} else $locale = $_COOKIE['gz_lang'];
-		}
-		if($locale=='en') $locale='en_US';
+	//function get_locale_2($locale='en_US'){$locale='en_US';
+	//	return $locale;
+	//}
+	function get_locale(){ //die($_COOKIE['gz_locale']);
+		$locale = isset($_COOKIE['gz_locale'])?$_COOKIE['gz_locale']:'th_TH'; //if(isset($_GET['d'])) die($locale);
 		return $locale;
 	}
 
@@ -238,12 +257,11 @@ class gz_multilang extends gz_tpl{
 	 * load_child_theme_textdomain($this->text_domain,get_stylesheet_directory().'/languages');
 	 */
 	function load_translations($force=false){
-	if($force || !$this->is_load_theme_textdomain){
-		update_option('template',$this->text_domain);
-		load_theme_textdomain($this->text_domain,get_stylesheet_directory().'/languages');
+		if($force || !$this->is_load_theme_textdomain){
+			update_option('template',$this->text_domain);
+			load_theme_textdomain($this->text_domain,get_stylesheet_directory().'/languages');
 		}
 	}
-	  
 
 	//
 	//Support functions
@@ -260,16 +278,15 @@ class gz_multilang extends gz_tpl{
 	}
 
 	function get_current_lang(){
-		//echo $_COOKIE['gz_lang'];
-		//$lang = get_user_option('user_lang_pref',get_current_user_id());
-		$lang = $this->get_locale();
+		if (isset($_GET['lang'])) $lang = $_GET['lang'];
+		elseif (isset($_COOKIE['lang'])) $lang = $_COOKIE['lang'];
+		else $lang = "th_TH";
 		return substr($lang,0,2);
-		//if(isset($_GET['lang'])) $cl=$_GET['lang']; else $cl=isset($_COOKIE['gz_lang'])?$_COOKIE['gz_lang']:'th';
-		//return $cl;
 	}
 
-	function get_field_lang($fn,$lang,$default=''){
-		global $post;
+	function get_field_lang($post,$fn,$lang,$default=''){
+		if(is_admin() && !wp_doing_ajax()) return $excerpt;
+		//global $post;
 		if($val=get_post_meta($post->ID,$fn.'_'.$lang)) return $val; else return $default;
 	}
 
@@ -277,12 +294,14 @@ class gz_multilang extends gz_tpl{
 		echo '<pre>'.print_r([
 			'is_admin()'		=> is_admin(),
 			'wp_doing_ajax()'	=> wp_doing_ajax(),
-			'$_GET'				=> $_GET['locale'],
-			'$_COOKIE'			=> $_COOKIE['gz_locale'],
-			'get_user_option()'		=> get_user_option( 'user_lang_pref', get_current_user_id() ),
-			'$this->get_locale()'	=> $this->get_locale(),
-			'get_locale()'			=> get_locale(),
-			'get_current_lang()'	=> $this->get_current_lang(),
+			'$_GET["lang"]'		=> isset($_GET['lang'])?$_GET['lang']:'n/a',
+			'$_COOKIE["gz_locale"]'	=> $_COOKIE["gz_locale"],
+			'$_COOKIE["gz_lang"]'	=> $_COOKIE["gz_lang"],
+			//'get_current_user_id()'	=> get_current_user_id(),
+			//'get_user_option()'		=> get_user_option( 'user_lang_pref', 1 ),
+			//'$this->get_locale()'	=> $this->get_locale(),
+			//'get_locale()'			=> get_locale(),
+			//'get_current_lang()'	=> $this->get_current_lang(),
 		],true).'</pre>';
 	}
 	///////////////////////////////////////////
